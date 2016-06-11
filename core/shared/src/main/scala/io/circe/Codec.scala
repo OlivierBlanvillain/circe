@@ -1,4 +1,7 @@
-import io.circe._
+package io.circe
+
+import java.util.UUID
+import cats.data._
 
 /**
  * A type class that provides back and forth conversion between values of type `A`
@@ -14,4 +17,17 @@ object Codec {
       def apply(c: HCursor): Decoder.Result[A] = d(c)
       def apply(a: A): Json = e(a)
     }
+
+  implicit final val codecUUID: Codec[UUID] = new Codec[UUID] {
+    final def apply(c: HCursor): Decoder.Result[UUID] = c.focus match {
+      case Json.JString(string) if string.length == 36 => try {
+        Xor.right(UUID.fromString(string))
+      } catch {
+        case _: IllegalArgumentException => Xor.left(DecodingFailure("UUID", c.history))
+      }
+      case _ => Xor.left(DecodingFailure("UUID", c.history))
+    }
+
+    final def apply(a: UUID): Json = Json.fromString(a.toString)
+  }
 }

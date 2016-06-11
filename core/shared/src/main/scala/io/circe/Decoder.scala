@@ -4,7 +4,6 @@ import cats.{ MonadError, SemigroupK }
 import cats.data.{ Kleisli, NonEmptyList, OneAnd, Validated, Xor }
 import cats.std.list._
 import io.circe.export.Exported
-import java.util.UUID
 import scala.collection.generic.CanBuildFrom
 import scala.collection.mutable.Builder
 
@@ -497,20 +496,6 @@ final object Decoder extends TupleDecoders with ProductDecoders with LowPriority
         case _: NumberFormatException => Xor.left(DecodingFailure("BigDecimal", c.history))
       }
       case _ => Xor.left(DecodingFailure("BigDecimal", c.history))
-    }
-  }
-
-  /**
-   * @group Decoding
-   */
-  implicit final val decodeUUID: Decoder[UUID] = new Decoder[UUID] {
-    final def apply(c: HCursor): Result[UUID] = c.focus match {
-      case JString(string) if string.length == 36 => try {
-        Xor.right(UUID.fromString(string))
-      } catch {
-        case _: IllegalArgumentException => Xor.left(DecodingFailure("UUID", c.history))
-      }
-      case _ => Xor.left(DecodingFailure("UUID", c.history))
     }
   }
 

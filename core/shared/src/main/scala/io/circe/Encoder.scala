@@ -4,7 +4,6 @@ import cats.data._
 import cats.functor.Contravariant
 import cats.Foldable
 import io.circe.export.Exported
-import java.util.UUID
 import scala.collection.GenSeq
 import scala.collection.generic.IsTraversableOnce
 
@@ -196,13 +195,6 @@ object Encoder extends TupleEncoders with ProductEncoders with MidPriorityEncode
    */
   implicit final val encodeBigDecimal: Encoder[BigDecimal] = new Encoder[BigDecimal] {
     final def apply(a: BigDecimal): Json = Json.fromBigDecimal(a)
-  }
-
-  /**
-   * @group Encoding
-   */
-  implicit final val encodeUUID: Encoder[UUID] = new Encoder[UUID] {
-    final def apply(a: UUID): Json = Json.fromString(a.toString)
   }
 
   /**

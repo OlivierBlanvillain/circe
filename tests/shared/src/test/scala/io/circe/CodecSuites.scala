@@ -36,6 +36,8 @@ class AnyValCodecSuite extends CirceSuite {
 }
 
 class StdLibCodecSuite extends CirceSuite {
+  implicit val c = io.circe.Codec.codecUUID
+
   checkLaws("Codec[String]", CodecTests[String].codec)
   checkLaws("Codec[BigInt]", CodecTests[BigInt].codec)
   checkLaws("Codec[BigDecimal]", CodecTests[BigDecimal].codec)
